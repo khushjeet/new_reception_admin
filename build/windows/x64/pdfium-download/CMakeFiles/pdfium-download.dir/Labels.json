@@ -1,0 +1,46 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "D:/flutter project/receptions_app/build/windows/x64/pdfium-download/CMakeFiles/pdfium-download"
+		},
+		{
+			"file" : "D:/flutter project/receptions_app/build/windows/x64/pdfium-download/CMakeFiles/58e63fb048a4e1f00295fd7c4b831465/pdfium-download.rule"
+		},
+		{
+			"file" : "D:/flutter project/receptions_app/build/windows/x64/pdfium-download/CMakeFiles/7b714763abd80b2e5b94e1d9499cceea/pdfium-download-complete.rule"
+		},
+		{
+			"file" : "D:/flutter project/receptions_app/build/windows/x64/pdfium-download/CMakeFiles/3e002dc55e17363f63626f218f0950cb/pdfium-download-build.rule"
+		},
+		{
+			"file" : "D:/flutter project/receptions_app/build/windows/x64/pdfium-download/CMakeFiles/3e002dc55e17363f63626f218f0950cb/pdfium-download-configure.rule"
+		},
+		{
+			"file" : "D:/flutter project/receptions_app/build/windows/x64/pdfium-download/CMakeFiles/3e002dc55e17363f63626f218f0950cb/pdfium-download-download.rule"
+		},
+		{
+			"file" : "D:/flutter project/receptions_app/build/windows/x64/pdfium-download/CMakeFiles/3e002dc55e17363f63626f218f0950cb/pdfium-download-install.rule"
+		},
+		{
+			"file" : "D:/flutter project/receptions_app/build/windows/x64/pdfium-download/CMakeFiles/3e002dc55e17363f63626f218f0950cb/pdfium-download-mkdir.rule"
+		},
+		{
+			"file" : "D:/flutter project/receptions_app/build/windows/x64/pdfium-download/CMakeFiles/3e002dc55e17363f63626f218f0950cb/pdfium-download-patch.rule"
+		},
+		{
+			"file" : "D:/flutter project/receptions_app/build/windows/x64/pdfium-download/CMakeFiles/3e002dc55e17363f63626f218f0950cb/pdfium-download-test.rule"
+		},
+		{
+			"file" : "D:/flutter project/receptions_app/build/windows/x64/pdfium-download/CMakeFiles/3e002dc55e17363f63626f218f0950cb/pdfium-download-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"pdfium-download"
+		],
+		"name" : "pdfium-download"
+	}
+}

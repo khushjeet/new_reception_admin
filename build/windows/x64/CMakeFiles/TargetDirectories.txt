@@ -1,0 +1,13 @@
+D:/flutter project/receptions_app/build/windows/x64/CMakeFiles/INSTALL.dir
+D:/flutter project/receptions_app/build/windows/x64/CMakeFiles/ALL_BUILD.dir
+D:/flutter project/receptions_app/build/windows/x64/CMakeFiles/ZERO_CHECK.dir
+D:/flutter project/receptions_app/build/windows/x64/flutter/CMakeFiles/flutter_wrapper_plugin.dir
+D:/flutter project/receptions_app/build/windows/x64/flutter/CMakeFiles/flutter_wrapper_app.dir
+D:/flutter project/receptions_app/build/windows/x64/flutter/CMakeFiles/flutter_assemble.dir
+D:/flutter project/receptions_app/build/windows/x64/flutter/CMakeFiles/INSTALL.dir
+D:/flutter project/receptions_app/build/windows/x64/runner/CMakeFiles/receptions_app.dir
+D:/flutter project/receptions_app/build/windows/x64/runner/CMakeFiles/INSTALL.dir
+D:/flutter project/receptions_app/build/windows/x64/runner/CMakeFiles/ALL_BUILD.dir
+D:/flutter project/receptions_app/build/windows/x64/plugins/printing/CMakeFiles/printing_plugin.dir
+D:/flutter project/receptions_app/build/windows/x64/plugins/printing/CMakeFiles/INSTALL.dir
+D:/flutter project/receptions_app/build/windows/x64/plugins/printing/CMakeFiles/ALL_BUILD.dir

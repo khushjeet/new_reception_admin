@@ -1,0 +1,1 @@
+ D:\\flutter\ project\\receptions_app\\.dart_tool\\flutter_build\\2d89820f702b825ed99ead553e7784e4\\native_assets.yaml: 
