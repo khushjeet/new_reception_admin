@@ -33,7 +33,7 @@ class _UpconingPatientRegisPageState extends State<UpconingPatientRegisPage> {
 
   Future<List<Patient>> fetchPatientData(int doctorId) async {
     final response = await http.get(Uri.parse(
-        'http://192.168.73.30/reciptions/patient_detail_api/get_uocoming_patient_data_dc_id.php?doctor_id=$doctorId'));
+        'http://test.ankusamlogistics.com/doc_reception_api/patient_detail_api/get_uocoming_patient_data_dc_id.php?doctor_id=$doctorId'));
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> jsonResponse = json.decode(response.body);

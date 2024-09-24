@@ -4,8 +4,6 @@ D:/flutter project/receptions_app/build/windows/x64/runner/Debug/printing_plugin
 D:/flutter project/receptions_app/build/windows/x64/runner/Debug/pdfium.dll
 D:/flutter project/receptions_app/build/windows/x64/runner/Debug/data/flutter_assets/AssetManifest.bin
 D:/flutter project/receptions_app/build/windows/x64/runner/Debug/data/flutter_assets/AssetManifest.json
-D:/flutter project/receptions_app/build/windows/x64/runner/Debug/data/flutter_assets/assets/background_image.jpg
-D:/flutter project/receptions_app/build/windows/x64/runner/Debug/data/flutter_assets/assets/background_image1.svg
 D:/flutter project/receptions_app/build/windows/x64/runner/Debug/data/flutter_assets/assets/fonts/Roboto-Bold.ttf
 D:/flutter project/receptions_app/build/windows/x64/runner/Debug/data/flutter_assets/assets/fonts/Roboto-Regular.ttf
 D:/flutter project/receptions_app/build/windows/x64/runner/Debug/data/flutter_assets/assets/logo.jpg

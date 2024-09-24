@@ -20,7 +20,7 @@ class InsertPatientController extends GetxController {
   }) async {
     try {
       var url = Uri.parse(
-          'http://192.168.73.30/reciptions/patient_detail_api/insert_pasentient_registration.php');
+          'http://test.ankusamlogistics.com/doc_reception_api/patient_detail_api/insert_pasentient_registration.php');
 
       // Ensure all values in the body are strings
       var response = await http.post(url, body: {

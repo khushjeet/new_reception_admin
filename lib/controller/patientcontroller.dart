@@ -42,7 +42,8 @@ class PatientController extends GetxController {
       return;
     }
 
-    const url = 'http://192.168.73.30/reciptions/patient_registration.php';
+    const url =
+        'http://test.ankusamlogistics.com/doc_reception_api/patient_detail_api/patient_registration.php';
 
     try {
       final response = await http.post(

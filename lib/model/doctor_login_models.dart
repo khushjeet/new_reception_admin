@@ -27,21 +27,39 @@ class Doctor {
     required this.clinicPhotos,
   });
 
+  // Factory method to create Doctor object from JSON
   factory Doctor.fromJson(Map<String, dynamic> json) {
     return Doctor(
-      doctorId: json['doctor_id'] ?? 0, // Provide a default value if null
+      doctorId: int.tryParse(json['doctor_id']?.toString() ?? '') ?? 0,
       clinicName: json['clinic_name'] ?? '',
       doctorsName: json['doctors_name'] ?? '',
       doctorSpecelization: json['doctor_specelization'] ?? '',
       doctorQualification: json['doctor_qualification'] ?? '',
       doctorPreviousExperience: json['doctor_previous_experience'] ?? '',
       doctorAddress: json['doctor_address'] ?? '',
-      doctorPhone:
-          json['doctor_phone'] ?? 0, // Provide a default value for integer
+      doctorPhone: int.tryParse(json['doctor_phone']?.toString() ?? '') ?? 0,
       consultaionTime: json['consultaion_time'] ?? '',
       username: json['username'] ?? '',
       password: json['password'] ?? '',
       clinicPhotos: json['clinic_photos'] ?? '',
     );
+  }
+
+  // Method to convert Doctor object to JSON
+  Map<String, dynamic> toJson() {
+    return {
+      'doctor_id': doctorId.toString(), // Convert int to string for JSON
+      'clinic_name': clinicName,
+      'doctors_name': doctorsName,
+      'doctor_specelization': doctorSpecelization,
+      'doctor_qualification': doctorQualification,
+      'doctor_previous_experience': doctorPreviousExperience,
+      'doctor_address': doctorAddress,
+      'doctor_phone': doctorPhone.toString(), // Convert int to string for JSON
+      'consultaion_time': consultaionTime,
+      'username': username,
+      'password': password,
+      'clinic_photos': clinicPhotos,
+    };
   }
 }

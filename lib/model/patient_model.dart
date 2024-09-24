@@ -15,7 +15,7 @@ class Patient {
   final String? bloodPressure;
   final String? pulse;
   final String validUpTo;
-  final String? complainent; // New field for complaints
+  late final String? complainent; // New field for complaints
 
   Patient({
     required this.id,

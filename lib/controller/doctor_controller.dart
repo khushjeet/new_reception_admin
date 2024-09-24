@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:receptions_app/model/doctor_login_models.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DoctorController extends GetxController {
   // Observable to hold doctor's data
@@ -22,10 +23,11 @@ class DoctorController extends GetxController {
 
   var isLoading = false.obs;
 
+  // Login and get doctor details
   Future<Doctor?> loginAndGetDoctorDetails(
       String username, String password) async {
     final url = Uri.parse(
-        'http://192.168.73.30/reciptions/doctor/get_doctor_detail_th_username.php');
+        'http://test.ankusamlogistics.com/doc_reception_api/doctor/get_doctor_detail_th_username.php');
 
     try {
       isLoading.value = true; // Set loading to true
@@ -48,6 +50,12 @@ class DoctorController extends GetxController {
           // Update the observable with the new data
           doctor.value = doctorDetails;
 
+          // Save login data to SharedPreferences (persist it)
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.setBool('isLoggedIn', true);
+          await prefs.setString('doctor',
+              json.encode(doctorDetails.toJson())); // Save doctor data as JSON
+
           return doctorDetails;
         } else {
           Get.snackbar("Error", jsonResponse['message'] ?? 'Login failed');
@@ -63,5 +71,33 @@ class DoctorController extends GetxController {
     } finally {
       isLoading.value = false; // Set loading to false
     }
+  }
+
+  // Logout functionality
+  Future<void> logout() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    // Clear the saved login data from SharedPreferences
+    await prefs.remove('isLoggedIn');
+    await prefs.remove('doctor');
+
+    // Reset the observable to default (empty doctor data)
+    doctor.value = Doctor(
+      doctorId: 0,
+      clinicName: '',
+      doctorsName: '',
+      doctorSpecelization: '',
+      doctorQualification: '',
+      doctorPreviousExperience: '',
+      doctorAddress: '',
+      doctorPhone: 0,
+      consultaionTime: '',
+      username: '',
+      password: '',
+      clinicPhotos: '',
+    );
+
+    // Optionally, navigate the user to the login screen
+    Get.offAllNamed('/login'); // This assumes you have a named route for login
   }
 }

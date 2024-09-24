@@ -38,7 +38,8 @@ class _PatientListViewState extends State<PatientListView> {
   Future<List<Patient>> getDataFromPatientRegistration() async {
     try {
       var res = await http.post(
-        Uri.parse("http://192.168.73.30/reciptions/get_appoitment.php"),
+        Uri.parse(
+            "http://test.ankusamlogistics.com/doc_reception_api/patient_detail_api/get_appointment.php"),
         body: {
           'id': prController.doctorId.toString(),
         },
