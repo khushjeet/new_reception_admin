@@ -10,13 +10,13 @@ class TestPage extends StatefulWidget {
   const TestPage({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
   _TestPageState createState() => _TestPageState();
 }
 
 class _TestPageState extends State<TestPage> {
   List<PatientTest> patientTests = [];
   final patientController = Get.put(PatientController());
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -29,52 +29,80 @@ class _TestPageState extends State<TestPage> {
         'http://test.ankusamlogistics.com/doc_reception_api/patient_detail_api/get_today_patient_data.php?doctor_id=${patientController.doctorId}');
     final response = await http.get(url);
 
+    if (!mounted) return; // Check if widget is still in the tree
+
     if (response.statusCode == 200) {
       final jsonResponse = json.decode(response.body);
       if (jsonResponse['status'] == true) {
-        if (mounted) {
-          setState(() {
-            patientTests = (jsonResponse['data'] as List)
-                .map((data) => PatientTest.fromJson(data))
-                .toList();
-          });
-        }
+        setState(() {
+          patientTests = (jsonResponse['data'] as List)
+              .map((data) => PatientTest.fromJson(data))
+              .toList();
+          isLoading = false;
+        });
+      } else {
+        setState(() {
+          isLoading = false;
+        });
+        Get.snackbar("Error", "Today Not Registered any Patient Yet");
       }
     } else {
-      // Handle errors appropriately
-      Get.snackbar("Error", "Failed to fetch patient data");
+      if (!mounted) return; // Check if widget is still in the tree
+      setState(() {
+        isLoading = false;
+      });
+      Get.snackbar("Error", "Failed to connect to the server");
     }
   }
 
   Future<void> _showUpdateDialog(PatientTest patient, String field) async {
     TextEditingController controller = TextEditingController();
     controller.text = _getInitialValueForField(patient, field);
+    bool isUpdating = false;
 
     await showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: Text('Update $field'),
-          content: _buildDialogContent(field, controller),
-          actions: [
-            TextButton(
-              onPressed: () async {
-                _updatePatientFieldLocally(patient, field, controller.text);
-                await _updatePatientField(patient, field, controller.text);
-                if (mounted) {
-                  Get.back();
-                }
-              },
-              child: const Text('Update'),
+        return StatefulBuilder(builder: (context, setState) {
+          return AlertDialog(
+            title: Text('Update $field'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (isUpdating)
+                  const Center(child: CircularProgressIndicator())
+                else
+                  _buildDialogContent(field, controller),
+              ],
             ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Cancel'),
-            ),
-          ],
-        );
+            actions: [
+              TextButton(
+                onPressed: () async {
+                  setState(() {
+                    isUpdating = true;
+                  });
+
+                  _updatePatientFieldLocally(patient, field, controller.text);
+                  await _updatePatientField(patient, field, controller.text);
+
+                  if (mounted) {
+                    setState(() {
+                      isUpdating = false;
+                    });
+                    Get.back();
+                  }
+                },
+                child: const Text('Update'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Cancel'),
+              ),
+            ],
+          );
+        });
       },
     );
   }
@@ -134,6 +162,7 @@ class _TestPageState extends State<TestPage> {
 
   void _updatePatientFieldLocally(
       PatientTest patient, String field, String value) {
+    if (!mounted) return; // Check if widget is still in the tree
     setState(() {
       switch (field) {
         case 'Weight':
@@ -154,23 +183,50 @@ class _TestPageState extends State<TestPage> {
 
   Future<void> _updatePatientField(
       PatientTest patient, String field, String value) async {
-    // Your logic to update the patient field in the backend
-    // For example:
+    Map<String, String> body = {
+      'pt_id': patient.ptId.toString(),
+    };
+
+    switch (field) {
+      case 'Weight':
+        body['pt_wt'] = value;
+        break;
+      case 'Pulse':
+        body['pt_pluse'] = value;
+        break;
+      case 'BP':
+        body['pt_bp'] = value;
+        break;
+      case 'Next Visiting Date':
+        body['pt_next_visiting_date'] = value;
+        break;
+      default:
+        Get.snackbar("Error", "Invalid field");
+        return;
+    }
+
     final response = await http.post(
       Uri.parse(
-          'https://test.ankusamlogistics.com/doc_reception_api/doctor/pt_generated_pdf.php'),
-      body: {
-        'pt_id': patient.ptId.toString(),
-        field.toLowerCase(): value,
-      },
+          'https://test.ankusamlogistics.com/doc_reception_api/patient_detail_api/update_patient_test_data_id.php'),
+      body: body,
     );
 
-    // Handle the response as needed
+    if (!mounted) return; // Check if widget is still in the tree
+
     if (response.statusCode == 200) {
-      // Successfully updated
+      final jsonResponse = json.decode(response.body);
+      if (jsonResponse['status'] == true) {
+        Get.snackbar(
+          "Success",
+          "$field updated successfully in the backend",
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+        );
+      } else {
+        Get.snackbar("Error", "Failed to update $field in the backend");
+      }
     } else {
-      // Handle errors appropriately
-      Get.snackbar("Error", "Failed to update patient data");
+      Get.snackbar("Error", "Failed to connect to the server");
     }
   }
 
@@ -182,8 +238,10 @@ class _TestPageState extends State<TestPage> {
         child: Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
-          child: Text(text,
-              style: const TextStyle(color: Color.fromARGB(238, 247, 227, 4))),
+          child: Text(
+            text,
+            style: const TextStyle(color: Color.fromARGB(238, 247, 227, 4)),
+          ),
         ),
       ),
     );
@@ -208,67 +266,88 @@ class _TestPageState extends State<TestPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.blueGrey,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              alignment: Alignment.topLeft,
-              padding: const EdgeInsets.all(10.0),
-              child: const Text(
-                "Patient Test Data",
-                style: TextStyle(fontWeight: FontWeight.w900, fontSize: 36),
+      body: Stack(
+        children: [
+          if (isLoading)
+            const Center(
+              child: CircularProgressIndicator(),
+            ),
+          if (!isLoading && patientTests.isEmpty)
+            const Center(
+              child: Text(
+                "Today No Data For Test",
+                style: TextStyle(color: Colors.white, fontSize: 18),
               ),
             ),
-            Row(
-              children: [
-                _rowHeader("Patient Id", 1),
-                _rowHeader("Patient Name", 1),
-                _rowHeader("Contact Number", 1),
-                _rowHeader("Weight", 1),
-                _rowHeader("Pulse", 1),
-                _rowHeader("BP", 1),
-                _rowHeader("Next Visiting Date", 1),
-              ],
-            ),
-            for (var patientTest in patientTests)
-              Row(
+          if (!isLoading && patientTests.isNotEmpty)
+            SingleChildScrollView(
+              child: Column(
                 children: [
-                  _rowData(patientTest.ptId.toString(), 1, null),
-                  _rowData(patientTest.ptName, 1, null),
-                  _rowData(patientTest.ptContactNumber, 1, null),
-                  _rowData(
-                    patientTest.ptWt,
-                    1,
-                    () => _showUpdateDialog(patientTest, 'Weight'),
+                  Container(
+                    alignment: Alignment.topLeft,
+                    padding: const EdgeInsets.all(10.0),
+                    child: const Text(
+                      "Patient Test Data",
+                      style:
+                          TextStyle(fontWeight: FontWeight.w900, fontSize: 36),
+                    ),
                   ),
-                  _rowData(
-                    patientTest.ptPulse,
-                    1,
-                    () => _showUpdateDialog(patientTest, 'Pulse'),
+                  Row(
+                    children: [
+                      _rowHeader("Patient Id", 1),
+                      _rowHeader("Patient Name", 1),
+                      _rowHeader("Weight", 1),
+                      _rowHeader("Pulse", 1),
+                      _rowHeader("BP", 1),
+                      _rowHeader("Next Visiting Date", 1),
+                    ],
                   ),
-                  _rowData(
-                    patientTest.ptBp,
-                    1,
-                    () => _showUpdateDialog(patientTest, 'BP'),
-                  ),
-                  _rowData(
-                    patientTest.ptNextVisitingDate,
-                    1,
-                    () => _showUpdateDialog(patientTest, 'Next Visiting Date'),
-                  ),
+                  for (var patientTest in patientTests)
+                    Row(
+                      children: [
+                        _rowData(patientTest.ptId.toString(), 1, null),
+                        _rowData(patientTest.ptName, 1, null),
+                        _rowData(
+                          patientTest.ptWt,
+                          1,
+                          () => _showUpdateDialog(patientTest, 'Weight'),
+                        ),
+                        _rowData(
+                          patientTest.ptPulse,
+                          1,
+                          () => _showUpdateDialog(patientTest, 'Pulse'),
+                        ),
+                        _rowData(
+                          patientTest.ptBp,
+                          1,
+                          () => _showUpdateDialog(patientTest, 'BP'),
+                        ),
+                        _rowData(
+                          patientTest.ptNextVisitingDate,
+                          1,
+                          () => _showUpdateDialog(
+                              patientTest, 'Next Visiting Date'),
+                        ),
+                      ],
+                    ),
                 ],
               ),
-          ],
-        ),
+            ),
+        ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    // Any cleanup tasks if needed, e.g., cancel timers, listeners, etc.
   }
 }
 
 class PatientTest {
-  final int ptId;
+  final String ptId;
   final String ptName;
-  final String ptContactNumber;
   String ptWt;
   String ptPulse;
   String ptBp;
@@ -277,22 +356,20 @@ class PatientTest {
   PatientTest({
     required this.ptId,
     required this.ptName,
-    required this.ptContactNumber,
-    this.ptWt = '',
-    this.ptPulse = '',
-    this.ptBp = '',
-    this.ptNextVisitingDate = '',
+    required this.ptWt,
+    required this.ptPulse,
+    required this.ptBp,
+    required this.ptNextVisitingDate,
   });
 
   factory PatientTest.fromJson(Map<String, dynamic> json) {
     return PatientTest(
-      ptId: json['pt_id'],
-      ptName: json['pt_name'],
-      ptContactNumber: json['pt_contact_number'],
-      ptWt: json['pt_wt'] ?? '',
-      ptPulse: json['pt_pulse'] ?? '',
-      ptBp: json['pt_bp'] ?? '',
-      ptNextVisitingDate: json['pt_next_visiting_date'] ?? '',
+      ptId: json['pt_id'].toString(),
+      ptName: json['pt_name'] ?? 'N/A',
+      ptWt: json['pt_wt']?.toString() ?? 'N/A',
+      ptPulse: json['pt_pluse']?.toString() ?? 'N/A',
+      ptBp: json['pt_bp']?.toString() ?? 'N/A',
+      ptNextVisitingDate: json['pt_next_visiting_date'] ?? 'N/A',
     );
   }
 }

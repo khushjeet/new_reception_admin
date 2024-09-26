@@ -47,6 +47,11 @@ if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   include("D:/flutter project/receptions_app/build/windows/x64/plugins/printing/cmake_install.cmake")
 endif()
 
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("D:/flutter project/receptions_app/build/windows/x64/plugins/url_launcher_windows/cmake_install.cmake")
+endif()
+
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Runtime" OR NOT CMAKE_INSTALL_COMPONENT)
   if(CMAKE_INSTALL_CONFIG_NAME MATCHES "^([Dd][Ee][Bb][Uu][Gg])$")
     list(APPEND CMAKE_ABSOLUTE_DESTINATION_FILES
@@ -152,7 +157,7 @@ endif()
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Runtime" OR NOT CMAKE_INSTALL_COMPONENT)
   if(CMAKE_INSTALL_CONFIG_NAME MATCHES "^([Dd][Ee][Bb][Uu][Gg])$")
     list(APPEND CMAKE_ABSOLUTE_DESTINATION_FILES
-     "D:/flutter project/receptions_app/build/windows/x64/runner/Debug/printing_plugin.dll;D:/flutter project/receptions_app/build/windows/x64/runner/Debug/pdfium.dll")
+     "D:/flutter project/receptions_app/build/windows/x64/runner/Debug/printing_plugin.dll;D:/flutter project/receptions_app/build/windows/x64/runner/Debug/pdfium.dll;D:/flutter project/receptions_app/build/windows/x64/runner/Debug/url_launcher_windows_plugin.dll")
     if(CMAKE_WARN_ON_ABSOLUTE_INSTALL_DESTINATION)
       message(WARNING "ABSOLUTE path INSTALL DESTINATION : ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
     endif()
@@ -162,10 +167,11 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "Runtime" OR NOT CMAKE_INSTALL_COMPONENT)
     file(INSTALL DESTINATION "D:/flutter project/receptions_app/build/windows/x64/runner/Debug" TYPE FILE FILES
       "D:/flutter project/receptions_app/build/windows/x64/plugins/printing/Debug/printing_plugin.dll"
       "D:/flutter project/receptions_app/build/windows/x64/pdfium-src/bin/pdfium.dll"
+      "D:/flutter project/receptions_app/build/windows/x64/plugins/url_launcher_windows/Debug/url_launcher_windows_plugin.dll"
       )
   elseif(CMAKE_INSTALL_CONFIG_NAME MATCHES "^([Pp][Rr][Oo][Ff][Ii][Ll][Ee])$")
     list(APPEND CMAKE_ABSOLUTE_DESTINATION_FILES
-     "D:/flutter project/receptions_app/build/windows/x64/runner/Profile/printing_plugin.dll;D:/flutter project/receptions_app/build/windows/x64/runner/Profile/pdfium.dll")
+     "D:/flutter project/receptions_app/build/windows/x64/runner/Profile/printing_plugin.dll;D:/flutter project/receptions_app/build/windows/x64/runner/Profile/pdfium.dll;D:/flutter project/receptions_app/build/windows/x64/runner/Profile/url_launcher_windows_plugin.dll")
     if(CMAKE_WARN_ON_ABSOLUTE_INSTALL_DESTINATION)
       message(WARNING "ABSOLUTE path INSTALL DESTINATION : ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
     endif()
@@ -175,10 +181,11 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "Runtime" OR NOT CMAKE_INSTALL_COMPONENT)
     file(INSTALL DESTINATION "D:/flutter project/receptions_app/build/windows/x64/runner/Profile" TYPE FILE FILES
       "D:/flutter project/receptions_app/build/windows/x64/plugins/printing/Profile/printing_plugin.dll"
       "D:/flutter project/receptions_app/build/windows/x64/pdfium-src/bin/pdfium.dll"
+      "D:/flutter project/receptions_app/build/windows/x64/plugins/url_launcher_windows/Profile/url_launcher_windows_plugin.dll"
       )
   elseif(CMAKE_INSTALL_CONFIG_NAME MATCHES "^([Rr][Ee][Ll][Ee][Aa][Ss][Ee])$")
     list(APPEND CMAKE_ABSOLUTE_DESTINATION_FILES
-     "D:/flutter project/receptions_app/build/windows/x64/runner/Release/printing_plugin.dll;D:/flutter project/receptions_app/build/windows/x64/runner/Release/pdfium.dll")
+     "D:/flutter project/receptions_app/build/windows/x64/runner/Release/printing_plugin.dll;D:/flutter project/receptions_app/build/windows/x64/runner/Release/pdfium.dll;D:/flutter project/receptions_app/build/windows/x64/runner/Release/url_launcher_windows_plugin.dll")
     if(CMAKE_WARN_ON_ABSOLUTE_INSTALL_DESTINATION)
       message(WARNING "ABSOLUTE path INSTALL DESTINATION : ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
     endif()
@@ -188,6 +195,7 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "Runtime" OR NOT CMAKE_INSTALL_COMPONENT)
     file(INSTALL DESTINATION "D:/flutter project/receptions_app/build/windows/x64/runner/Release" TYPE FILE FILES
       "D:/flutter project/receptions_app/build/windows/x64/plugins/printing/Release/printing_plugin.dll"
       "D:/flutter project/receptions_app/build/windows/x64/pdfium-src/bin/pdfium.dll"
+      "D:/flutter project/receptions_app/build/windows/x64/plugins/url_launcher_windows/Release/url_launcher_windows_plugin.dll"
       )
   endif()
 endif()

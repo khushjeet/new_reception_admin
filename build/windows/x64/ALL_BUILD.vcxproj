@@ -156,6 +156,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <Project>{DE8B1C33-2AD0-34AE-BD7E-215C7A620A60}</Project>
       <Name>receptions_app</Name>
     </ProjectReference>
+    <ProjectReference Include="D:\flutter project\receptions_app\build\windows\x64\plugins\url_launcher_windows\url_launcher_windows_plugin.vcxproj">
+      <Project>{022A24BA-4BAE-312D-BE37-607961060498}</Project>
+      <Name>url_launcher_windows_plugin</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

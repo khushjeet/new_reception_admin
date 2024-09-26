@@ -1,10 +1,10 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:receptions_app/controller/patientcontroller.dart';
 import 'package:receptions_app/model/patient_model.dart';
-import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class OldPatientPage extends StatefulWidget {
   static const String routeName = "/OldPatientPage";
@@ -26,13 +26,13 @@ class _OldPatientPageState extends State<OldPatientPage> {
   @override
   void initState() {
     super.initState();
-    futurePatientData = fetchPatientData(
-        int.parse(patientController.doctorId.value)); // Pass the doctor_id here
+    futurePatientData = fetchPatientData(int.parse(
+        patientController.doctorId.value)); // Fetch patient data by doctor ID
   }
 
   Future<List<Patient>> fetchPatientData(int doctorId) async {
     final response = await http.get(Uri.parse(
-        'http://test.ankusamlogistics.com/doc_reception_api/patient_detail_api/get_all_patient_data_th_dc_id.php?doctor_id=$doctorId'));
+        'https://test.ankusamlogistics.com/doc_reception_api/patient_detail_api/get_all_patient_data_th_dc_id.php?doctor_id=$doctorId'));
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> jsonResponse = json.decode(response.body);
@@ -98,14 +98,28 @@ class _OldPatientPageState extends State<OldPatientPage> {
             _rowCell(patient.age.toString(), 1),
             _rowCell(patient.address, 2),
             _rowCell(patient.contact, 2),
-            _rowCell(patient.email ?? 'N/A', 2), // New field
-            _rowCell(patient.nextVisitingDate ?? 'N/A', 2), // New field
-            _rowCell(patient.weight ?? 'N/A', 2), // New field
-            _rowCell(patient.bloodPressure ?? 'N/A', 2), // New field
-            _rowCell(patient.pulse ?? 'N/A', 2), // New field
-            _rowCell(patient.complainent ?? 'N/A', 2), // New field
+            _rowCell(patient.email ?? 'N/A', 2),
+            _rowCell(patient.nextVisitingDate ?? 'N/A', 2),
+            _rowCell(patient.weight ?? 'N/A', 2),
+            _rowCell(patient.bloodPressure ?? 'N/A', 2),
+            _rowCell(patient.pulse ?? 'N/A', 2),
+            _rowCell(patient.complainent ?? 'N/A', 2),
             _rowCell(patient.registrationTime, 2),
             _rowCell(patient.validUpTo, 2),
+            IconButton(
+              onPressed: () async {
+                int? count =
+                    await _showCountDialog(context); // Ask user for count
+                if (count != null) {
+                  String? pdfUrl = await fetchPdfPath(
+                      patient.id.toString(), patient.name, count);
+                  if (pdfUrl != null) {
+                    openPdf(pdfUrl); // Open the PDF URL if found
+                  }
+                }
+              },
+              icon: const Icon(Icons.print_rounded),
+            ),
           ],
         );
       }).toList(),
@@ -164,6 +178,7 @@ class _OldPatientPageState extends State<OldPatientPage> {
                       _rowHeader("Complainent", 2),
                       _rowHeader("Registration Time", 2),
                       _rowHeader("Valid Up to", 2),
+                      const Icon(Icons.print_sharp)
                     ],
                   ),
                   _buildPatientList(filteredPatients),
@@ -173,6 +188,89 @@ class _OldPatientPageState extends State<OldPatientPage> {
           }
         },
       ),
+    );
+  }
+
+// The existing fetchPdfPath function
+  Future<String?> fetchPdfPath(
+      String patientId, String patientName, int count) async {
+    // Replace spaces with underscores and convert the name to lowercase
+    patientName = patientName.toLowerCase().replaceAll(' ', '_');
+
+    final String url =
+        'https://test.ankusamlogistics.com/doc_reception_api/doctor/get_patient_genrated_pdf.php?patient_id=$patientId&patient_name=$patientName&count=$count';
+
+    try {
+      final response = await http.get(Uri.parse(url));
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> jsonResponse = json.decode(response.body);
+
+        if (jsonResponse.containsKey('pdf_url')) {
+          final pdfPath = jsonResponse['pdf_url'];
+          final fullUrl = '$pdfPath';
+          return fullUrl;
+        } else {
+          Get.snackbar('Error', jsonResponse['error'] ?? 'Unknown error');
+          return null;
+        }
+      } else {
+        Get.snackbar('Error', 'Failed to fetch PDF: ${response.reasonPhrase}');
+        return null;
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'An error occurred: $e');
+      return null;
+    }
+  }
+
+// The existing openPdf function
+  void openPdf(String url) async {
+    // ignore: deprecated_member_use
+    if (await canLaunch(url)) {
+      // ignore: deprecated_member_use
+      await launch(url); // Open the PDF in a browser or a PDF viewer
+    } else {
+      Get.snackbar('Error', 'Could not open the PDF');
+    }
+  }
+
+// Function to show a dialog and get count input from the user
+  Future<int?> _showCountDialog(BuildContext context) async {
+    TextEditingController countController = TextEditingController();
+    int? count;
+
+    return showDialog<int>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Enter Count'),
+          content: TextField(
+            controller: countController,
+            keyboardType: TextInputType.number,
+            decoration: const InputDecoration(hintText: "Enter the count"),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                count = int.tryParse(countController.text);
+                if (count != null) {
+                  Navigator.of(context).pop(count);
+                } else {
+                  Get.snackbar('Invalid Input', 'Please enter a valid number.');
+                }
+              },
+              child: const Text('Submit'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

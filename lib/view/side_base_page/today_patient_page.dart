@@ -137,7 +137,7 @@ class _TodayPatientPageState extends State<TodayPatientPage> {
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('No data available'));
+            return const Center(child: Text('Today No Registratiom available'));
           } else {
             return SingleChildScrollView(
               child: Column(

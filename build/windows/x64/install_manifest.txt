@@ -2,6 +2,7 @@ D:/flutter project/receptions_app/build/windows/x64/runner/Debug/data/icudtl.dat
 D:/flutter project/receptions_app/build/windows/x64/runner/Debug/flutter_windows.dll
 D:/flutter project/receptions_app/build/windows/x64/runner/Debug/printing_plugin.dll
 D:/flutter project/receptions_app/build/windows/x64/runner/Debug/pdfium.dll
+D:/flutter project/receptions_app/build/windows/x64/runner/Debug/url_launcher_windows_plugin.dll
 D:/flutter project/receptions_app/build/windows/x64/runner/Debug/data/flutter_assets/AssetManifest.bin
 D:/flutter project/receptions_app/build/windows/x64/runner/Debug/data/flutter_assets/AssetManifest.json
 D:/flutter project/receptions_app/build/windows/x64/runner/Debug/data/flutter_assets/assets/fonts/Roboto-Bold.ttf
