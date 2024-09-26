@@ -47,7 +47,7 @@ class _TestPageState extends State<TestPage> {
         Get.snackbar("Error", "Today Not Registered any Patient Yet");
       }
     } else {
-      if (!mounted) return; // Check if widget is still in the tree
+      if (!mounted) return;
       setState(() {
         isLoading = false;
       });
